@@ -76,7 +76,7 @@ module fibonacci_calculator
             case (next_state)
                 IDLE: begin
                     temp_1                  <=  1;
-                    temp_2                  ,=  1;
+                    temp_2                  <=  1;
 
                     counter                 <=  0;
 
