@@ -6,7 +6,7 @@ module fibonacci_calculator
     input  logic    [4:0]                       input_s, 
     input  logic                                begin_fibo, 
 
-    output logic    [15:0]                      fibo_out,
+    output logic    [27:0]                      fibo_out,
     output logic                                done
 );
 
@@ -38,7 +38,7 @@ module fibonacci_calculator
             end
             COMPUTE: begin
                 if (counter == store_s) begin
-                    next_state              =   IDLE;
+                    next_state              =   OUTPUT;
                 end
                 else begin
                     next_state              =   COMPUTE;
