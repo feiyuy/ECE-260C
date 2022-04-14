@@ -30,7 +30,12 @@ module fibonacci_calculator
         case (current_state)
             IDLE: begin
                 if (begin_fibo) begin
-                    next_state              =   COMPUTE;
+                    if (input_s == 0) begin
+                        next_state          =   OUTPUT;
+                    end
+                    else begin
+                        next_state          =   COMPUTE;
+                    end
                 end
                 else begin
                     next_state              =   IDLE;
