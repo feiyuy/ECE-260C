@@ -30,7 +30,12 @@ module fibonacci_calculator
         case (current_state)
             IDLE: begin
                 if (begin_fibo) begin
-                    next_state              =   COMPUTE;
+                    if (input_s == 0) begin
+                        next_state          =   OUTPUT;
+                    end
+                    else begin
+                        next_state          =   COMPUTE;
+                    end
                 end
                 else begin
                     next_state              =   IDLE;
@@ -58,13 +63,12 @@ module fibonacci_calculator
         endcase
     end
 
-    logic   [15:0]                          temp_1;
-    logic   [15:0]                          temp_2;
+    logic   [27:0]                          temp    [1:0];
 
     always_ff @(posedge clk) begin
         if (reset) begin
-            temp_1                          <=  1;
-            temp_2                          <=  1;
+            temp[0]                         <=  0;
+            temp[1]                         <=  1;
 
             counter                         <=  0;
             store_s                         <=  0;
@@ -75,16 +79,16 @@ module fibonacci_calculator
         else begin
             case (next_state)
                 IDLE: begin
-                    temp_1                  <=  1;
-                    temp_2                  <=  1;
+                    temp[0]                 <=  0;
+                    temp[1]                 <=  1;
 
                     counter                 <=  0;
 
                     done                    <=  0;
                 end
                 COMPUTE: begin
-                    temp_1                  <=  temp_2;
-                    temp_2                  <=  temp_1 + temp_2;
+                    temp[0]                 <=  temp[1];
+                    temp[1]                 <=  temp[0] + temp[1];
 
                     counter                 <=  counter + 1;
                     if (begin_fibo) begin
@@ -94,17 +98,17 @@ module fibonacci_calculator
                     done                    <=  0;
                 end
                 OUTPUT: begin
-                    temp_1                  <=  1;
-                    temp_2                  <=  1;
+                    temp[0]                 <=  0;
+                    temp[1]                 <=  1;
 
                     counter                 <=  0;
                     
-                    fibo_out                <=  temp_2;
+                    fibo_out                <=  temp[0];
                     done                    <=  1;
                 end
                 default: begin
-                    temp_1                  <=  1;
-                    temp_2                  <=  1;
+                    temp[0]                 <=  0;
+                    temp[1]                 <=  1;
 
                     counter                 <=  0;
                     store_s                 <=  0;
