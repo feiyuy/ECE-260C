@@ -8,6 +8,7 @@ module canonical_farrow_tb();
                       dat_in=0,				// data input, integer
                       dif=40;					// difference (related to offset) between dat_in and dat_out
   wire   signed[15:0] dat_out; 				// data output, should be shifted/delayed version of data input
+  wire   signed[15:0] test_result;
   logic               enable_out;
 
 farrow cf1
@@ -16,9 +17,11 @@ farrow cf1
 .enable_in(enable),
 .mu_in(mu),
 .data_in(dat_in),
-.data_out(dat_out),
-.enable_out(enable_out)
+.data_out(test_result),
+.enable_out()
 );
+
+canonical_farrow referemce (.*);
 
 always begin
   #5ns clk = 'b1;
