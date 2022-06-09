@@ -68,14 +68,7 @@ This is the top module of the farrow filter.
     logic   signed  [15:0]                                  temp_output3;
     logic   signed  [15:0]                                  temp_output4;
 
-    ALU
-    #(
-        .PARAM1                                             (-2730),
-        .PARAM2                                             (8192),
-        .PARAM3                                             (-8192),
-        .PARAM4                                             (2730)
-    )
-    ALU_inst1
+    ALU ALU_inst1
     (
         .clk                                                (clk),
         .rst                                                (rst),
@@ -87,19 +80,17 @@ This is the top module of the farrow filter.
         .mu_in                                              (temp_mu1), 
         .enable_in                                          (temp_enable1),  
 
+        .weight1_in                                         (16'b11_11010101010101),
+        .weight2_in                                         (16'b00_10000000000000),
+        .weight3_in                                         (16'b11_10000000000000),
+        .weight4_in                                         (16'b00_00101010101011),
+
         .data_out                                           (temp_output1),
         .mu_out                                             (temp_mu2),
         .valid_out                                          (temp_enable2[0])  
     );
 
-    ALU
-    #(
-        .PARAM1                                             (8192),
-        .PARAM2                                             (16384),
-        .PARAM3                                             (8192),
-        .PARAM4                                             (0)
-    )
-    ALU_inst2
+    ALU ALU_inst2
     (
         .clk                                                (clk),
         .rst                                                (rst),
@@ -109,21 +100,19 @@ This is the top module of the farrow filter.
         .data3_in                                           (temp_input3),
         .data4_in                                           (temp_input4),   
         .mu_in                                              (),
-        .enable_in                                          (temp_enable1),   
+        .enable_in                                          (temp_enable1),  
+        
+        .weight1_in                                         (16'b00_10000000000000),
+        .weight2_in                                         (16'b11_00000000000000),
+        .weight3_in                                         (16'b00_10000000000000),
+        .weight4_in                                         (16'b00_00000000000000),
 
         .data_out                                           (temp_output2),
         .mu_out                                             (),       
         .valid_out                                          (temp_enable2[1])
     );
 
-    ALU
-    #(
-        .PARAM1                                             (-5461),
-        .PARAM2                                             (-8192),
-        .PARAM3                                             (16384),
-        .PARAM4                                             (-2730)
-    )
-    ALU_inst3
+    ALU ALU_inst3
     (
         .clk                                                (clk),
         .rst                                                (rst),
@@ -132,22 +121,20 @@ This is the top module of the farrow filter.
         .data2_in                                           (temp_input2),
         .data3_in                                           (temp_input3),
         .data4_in                                           (temp_input4),   
-        .mu_in                                              (),   
-        .enable_in                                          (temp_enable1),
+        .mu_in                                              (),
+        .enable_in                                          (temp_enable1),  
+        
+        .weight1_in                                         (16'b11_10101010101011),
+        .weight2_in                                         (16'b11_10000000000000),
+        .weight3_in                                         (16'b01_00000000000000),
+        .weight4_in                                         (16'b11_11010101010101),
 
-        .data_out                                           (temp_output3),
-        .mu_out                                             (),
+        .data_out                                           (temp_output2),
+        .mu_out                                             (),       
         .valid_out                                          (temp_enable2[2])
     );
 
-    ALU
-    #(
-        .PARAM1                                             (0),
-        .PARAM2                                             (16384),
-        .PARAM3                                             (0),
-        .PARAM4                                             (0)
-    )
-    ALU_inst4
+    ALU ALU_inst4
     (
         .clk                                                (clk),
         .rst                                                (rst),
@@ -155,13 +142,18 @@ This is the top module of the farrow filter.
         .data1_in                                           (temp_input1),
         .data2_in                                           (temp_input2),
         .data3_in                                           (temp_input3),
-        .data4_in                                           (temp_input4),  
-        .mu_in                                              (),   
-        .enable_in                                          (temp_enable1),
+        .data4_in                                           (temp_input4),   
+        .mu_in                                              (),
+        .enable_in                                          (temp_enable1),  
+        
+        .weight1_in                                         (16'b00_00000000000000),
+        .weight2_in                                         (16'b01_00000000000000),
+        .weight3_in                                         (16'b00_00000000000000),
+        .weight4_in                                         (16'b00_00000000000000),
 
-        .data_out                                           (temp_output4),
-        .mu_out                                             (),
-        .valid_out                                          (temp_enable2[3])                   
+        .data_out                                           (temp_output2),
+        .mu_out                                             (),       
+        .valid_out                                          (temp_enable2[3])
     );
 
     weighted weighted_inst

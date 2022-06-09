@@ -8,12 +8,6 @@ This module perform multiply then add operation.
  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module ALU
-#(
-    parameter   PARAM1                                      =   0,
-    parameter   PARAM2                                      =   0,
-    parameter   PARAM3                                      =   0,
-    parameter   PARAM4                                      =   0
-)
 (
     input   logic                                               clk,
     input   logic                                               rst,
@@ -24,6 +18,11 @@ module ALU
     input   logic   signed  [15:0]                              data4_in, 
     input   logic   signed  [15:0]                              mu_in,
     input   logic                                               enable_in,
+
+    input   logic   signed  [15:0]                              weight1_in,
+    input   logic   signed  [15:0]                              weight2_in,
+    input   logic   signed  [15:0]                              weight3_in,
+    input   logic   signed  [15:0]                              weight4_in,   
 
     output  logic   signed  [15:0]                              data_out,
     output  logic   signed  [15:0]                              mu_out,
@@ -67,18 +66,18 @@ module ALU
         end
         else begin
             if (enable_in) begin
-                temp_mul1                               <=  data1_in * PARAM1;
-                temp_mul2                               <=  data2_in * PARAM2;
-                temp_mul3                               <=  data3_in * PARAM3;
-                temp_mul4                               <=  data4_in * PARAM4;
+                temp_mul1                               <=  data1_in * weight1_in;
+                temp_mul2                               <=  data2_in * weight2_in;
+                temp_mul3                               <=  data3_in * weight3_in;
+                temp_mul4                               <=  data4_in * weight4_in;
 
                 temp_mu1                                <=  mu_in;
             end
         end
     end
 
-    logic   signed  [15:0]                                  temp_add1;
-    logic   signed  [15:0]                                  temp_add2;
+    logic   signed  [31:0]                                  temp_add1;
+    logic   signed  [31:0]                                  temp_add2;
 
     always_ff @(posedge clk) begin
         if (rst) begin
@@ -89,8 +88,8 @@ module ALU
         end
         else begin
             if (temp_enable1) begin
-                temp_add1                               <=  temp_mul1[29:14] + temp_mul2[29:14];
-                temp_add2                               <=  temp_mul3[29:14] + temp_mul4[29:14];
+                temp_add1                               <=  temp_mul1 + temp_mul2;
+                temp_add2                               <=  temp_mul3 + temp_mul4;
 
                 temp_mu2                                <=  temp_mu1;
             end
@@ -104,7 +103,7 @@ module ALU
         end
         else begin
             if (temp_enable2) begin
-                data_out                                <=  temp_add1 + temp_add2;
+                data_out                                <=  (temp_add1 + temp_add2) >>> 14;
                 mu_out                                  <=  temp_mu2;
             end
         end
