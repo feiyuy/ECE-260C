@@ -41,7 +41,7 @@ This is the top module of the farrow filter.
             temp_input2                                 <=  0;
             temp_input3                                 <=  0;
             temp_input4                                 <=  0;
-            temp_mu                                     <=  0;
+            temp_mu1                                    <=  0;
         end
         else begin
             if (enable_in) begin
