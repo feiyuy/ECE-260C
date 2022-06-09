@@ -10,13 +10,15 @@ This is the top module of the farrow filter.
 
  module farrow
  (
-     input  logic                                               clk,
-     input  logic                                               rst,
+    input   logic                                               clk,
+    input   logic                                               rst,
 
-     input  logic   signed  [15:0]                              data_in,
-     input  logic   signed  [15:0]                              mu_in,         
+    input   logic                                               enable_in,     
+    input   logic   signed  [15:0]                              data_in,
+    input   logic   signed  [15:0]                              mu_in,         
 
-     output logic   signed  [15:0]                              data_out
+    output  logic   signed  [15:0]                              data_out,
+    output  logic                                               enable_out
  );
 
     logic   signed  [15:0]                                  temp_input1;
@@ -26,8 +28,14 @@ This is the top module of the farrow filter.
 
     logic   signed  [15:0]                                  temp_mu1;
     logic   signed  [15:0]                                  temp_mu2;
+    
+    logic                                                   temp_enable1;
+    logic   [3:0]                                           temp_enable2;
+    logic                                                   temp_enable3;
 
-    always @(posedge clk) begin
+    assign  temp_enable3                                =   &temp_enable2;
+
+    always_ff @(posedge clk) begin
         if (rst) begin
             temp_input1                                 <=  0;
             temp_input2                                 <=  0;
@@ -36,11 +44,22 @@ This is the top module of the farrow filter.
             temp_mu                                     <=  0;
         end
         else begin
-            temp_input1                                 <=  data_in;
-            temp_input2                                 <=  temp_input1;
-            temp_input3                                 <=  temp_input2;
-            temp_input4                                 <=  temp_input3;
-            temp_mu1                                    <=  mu_in;
+            if (enable_in) begin
+                temp_input1                             <=  data_in;
+                temp_input2                             <=  temp_input1;
+                temp_input3                             <=  temp_input2;
+                temp_input4                             <=  temp_input3;
+                temp_mu1                                <=  mu_in;
+            end
+        end
+    end
+
+    always_ff @(posedge clk) begin
+        if (rst) begin
+            temp_enable1                                <=  0;
+        end 
+        else begin
+            temp_enable1                                <=  enable_in;
         end
     end
 
@@ -65,10 +84,12 @@ This is the top module of the farrow filter.
         .data2_in                                           (temp_input2),
         .data3_in                                           (temp_input3),
         .data4_in                                           (temp_input4),
-        .mu_in                                              (temp_mu1),   
+        .mu_in                                              (temp_mu1), 
+        .enable_in                                          (temp_enable1),  
 
         .data_out                                           (temp_output1),
-        .mu_out                                             (temp_mu2)    
+        .mu_out                                             (temp_mu2),
+        .valid_out                                          (temp_enable2[0])  
     );
 
     ALU
@@ -87,10 +108,12 @@ This is the top module of the farrow filter.
         .data2_in                                           (temp_input2),
         .data3_in                                           (temp_input3),
         .data4_in                                           (temp_input4),   
-        .mu_in                                              (),   
+        .mu_in                                              (),
+        .enable_in                                          (temp_enable1),   
 
         .data_out                                           (temp_output2),
-        .mu_out                                             ()       
+        .mu_out                                             (),       
+        .valid_out                                          (temp_enable2[1])
     );
 
     ALU
@@ -110,9 +133,11 @@ This is the top module of the farrow filter.
         .data3_in                                           (temp_input3),
         .data4_in                                           (temp_input4),   
         .mu_in                                              (),   
+        .enable_in                                          (temp_enable1),
 
         .data_out                                           (temp_output3),
-        .mu_out                                             ()             
+        .mu_out                                             (),
+        .valid_out                                          (temp_enable2[2])
     );
 
     ALU
@@ -132,9 +157,11 @@ This is the top module of the farrow filter.
         .data3_in                                           (temp_input3),
         .data4_in                                           (temp_input4),  
         .mu_in                                              (),   
+        .enable_in                                          (temp_enable1),
 
         .data_out                                           (temp_output4),
-        .mu_out                                             ()                   
+        .mu_out                                             (),
+        .valid_out                                          (temp_enable2[3])                   
     );
 
     weighted weighted_inst
@@ -146,9 +173,11 @@ This is the top module of the farrow filter.
         .data2_in                                           (temp_output2),
         .data3_in                                           (temp_output3),
         .data4_in                                           (temp_output4),  
-        .mu_in                                              (temp_mu2),   
+        .mu_in                                              (temp_mu2),
+        .enable_in                                          (temp_enable3),   
 
-        .data_out                                           (data_out)
+        .data_out                                           (data_out),
+        .valid_out                                          (enable_out)
     );
 
  endmodule
