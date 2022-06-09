@@ -101,7 +101,7 @@ This module perform sum of AULs' result with weight mu.
             if (temp_enable1) begin
                 temp2_mu1                               <=  temp1_mu1;
                 temp2_mu2                               <=  temp1_mu2[29:14];
-                temp1_mu3                               <=  temp1_mu2[29:14] * mu_in;
+                temp1_mu3                               <=  temp1_mu2[29:14] * temp1_mu1;
 
                 temp2_data1                             <=  temp1_data1;
                 temp2_data2                             <=  temp1_data2;
