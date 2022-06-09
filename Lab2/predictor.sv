@@ -25,13 +25,13 @@
     logic   [7:0]                                          index_table      [15:0];
 
     initial begin
-        $readmemh("IndexTable.list", index_table);
+        $readmemh("IndexTable.mem", index_table);
     end
 
     logic   signed  [8:0]                                   temp_index;
     logic   signed  [15:0]                                  temp_pre_sample;
 
-    always_ff (@posedge clk) begin
+    always_ff @(posedge clk) begin
         if (rst) begin
             temp_index                                  <=  0;
             temp_pre_sample                             <=  0;

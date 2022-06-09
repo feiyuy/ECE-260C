@@ -10,6 +10,9 @@ This module updates the index based on index table and the input code.
 
 module index_updator
 (
+    input   logic                                               clk,
+    input   logic                                               rst,
+    
     input   logic   [7:0]                                       index_in,
     input   logic   signed  [3:0]                               code_in,
 
@@ -20,12 +23,12 @@ module index_updator
     logic   [7:0]                                          index_table      [15:0];
 
     initial begin
-        $readmemh("IndexTable.list", index_table);
+        $readmemh("IndexTable.mem", index_table);
     end
 
     logic   signed  [8:0]                                   temp_index;
 
-    always_ff (@posedge clk) begin
+    always_ff @(posedge clk) begin
         if (rst) begin
             temp_index                                  <=  0;
         end

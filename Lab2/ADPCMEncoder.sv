@@ -40,7 +40,7 @@
     logic   [14:0]                                          step_table      [88:0];
 
     initial begin
-        $readmemh("StepTable.list", step_table);
+        $readmemh("StepTable.mem", step_table);
     end
 
     logic   [14:0]                                          step_size;

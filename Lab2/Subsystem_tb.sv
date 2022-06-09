@@ -38,16 +38,43 @@
 
 `timescale 1 ns / 1 ns
 
+class Packet;
+  rand bit [4:0]  change;
+endclass
+
 module Subsystem_tb;
 
   logic               clk = 'b0,
                       reset = 'b1,
                       enable = 'b0;
 
-    logic  signed[15:0] in1;
+    logic  signed[15:0] in1=0;
 
-    logic  signed[15:0] Out1, Out2;
+    logic  signed[15:0] Out1;
+    logic  signed[3:0] Out2;
     logic             ce_out;
+
+
+  always begin
+    #5ns clk = 'b1;
+    #5ns clk = 'b0;
+  end
+
+
+  initial begin
+    automatic Packet pkt = new();
+    #20ns reset = 'b0;
+    enable = 'b1;
+    for(int i=0; i<60; i++) begin
+      #10ns 
+      pkt.randomize();
+      in1 = in1 + pkt.change;
+    end
+    #20ns $stop;
+  end
+  
+  
+  
 
   Subsystem u_Subsystem (.clk(clk),
                          .reset_x(reset),
@@ -57,32 +84,6 @@ module Subsystem_tb;
                          .Out1(Out1),  // sfix20_En16
                          .Out2(Out2)  // sfix2
                          );
-
-  always begin
-    #5ns clk = 'b1;
-    #5ns clk = 'b0;
-  end
-
-  rand bit [5:0]  change;
-
-  initial begin
-    #20ns reset = 'b0;
-    enable = 'b1;
-    for(int i=0; i<1000; i++) begin
-      #10ns 
-      randomize();
-    #20ns $stop;
-  end
-  end
-
-  always @(posedge clk) begin
-    if (reset) begin
-        in1     <=  0;
-    end
-    else begin
-        int1    <=  in1 + $signed(change);
-    end
-  end
 
 endmodule  // Subsystem_tb
 

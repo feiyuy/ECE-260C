@@ -62,7 +62,7 @@ This module updates the predict result.
             assign  predict_out                         =   -32767;
         end
         else begin
-            assign  predict_out                         =   temp_pre_sample;
+            assign  predict_out                         =   temp_result;
         end
     end
 

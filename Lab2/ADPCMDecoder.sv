@@ -13,7 +13,7 @@ module ADPCMDecoder
     input   logic                                               rst,
 
     input   logic   signed  [3:0]                               data_in,
-    input   logic                                               eanble_in,
+    input   logic                                               enable_in,
 
     output  logic   signed  [15:0]                              data_out,
     output  logic                                               valid_out
@@ -29,13 +29,14 @@ module ADPCMDecoder
             temp_enable                                 <=  0;
         end
         else begin
-            if (eanble_in) begin
+            if (enable_in) begin
                 temp_code                               <=  data_in;
                 temp_enable                             <=  1;
             end
             else begin
                 temp_code                               <=  0;
                 temp_enable                             <=  0;
+            end
         end
     end
 
@@ -45,7 +46,7 @@ module ADPCMDecoder
     logic   [14:0]                                          step_table      [88:0];
 
     initial begin
-        $readmemh("StepTable.list", step_table);
+        $readmemh("StepTable.mem", step_table);
     end
 
     logic   [14:0]                                          step_size;
@@ -54,6 +55,9 @@ module ADPCMDecoder
 
     index_updator   index_updator_inst
     (
+        .clk                                                (clk),
+        .rst                                                (rst),
+        
         .index_in                                           (index),
         .code_in                                            (temp_code),
 
@@ -83,6 +87,7 @@ module ADPCMDecoder
             else begin
                 valid_out                               <=  0;
                 data_out                                <=  0;
+            end
         end
     end
     

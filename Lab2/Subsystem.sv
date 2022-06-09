@@ -51,16 +51,17 @@ module Subsystem
   input   clk;
   input   reset_x;
   input   clk_enable;
-  input   signed [19:0] in1;  // sfix20_En16
+  input   signed [15:0] in1;  // sfix20_En16
   output  ce_out;
-  output  signed [19:0] Out1;  // sfix20_En16
-  output  signed [1:0] Out2;  // sfix2
+  output  signed [15:0] Out1;  // sfix20_En16
+  output  signed [3:0] Out2;  // sfix2
 
 
-  wire signed [1:0] adpcm_encoder2_out1;  // sfix2
-  wire signed [19:0] ADPCM_Decoder1_out1;  // sfix20_En16
+  wire signed [3:0] adpcm_encoder2_out1;  // sfix2
+  wire signed [15:0] ADPCM_Decoder1_out1;  // sfix20_En16
 
-  logic   valid;
+  logic   valid1;
+  logic   valid2;
 
 
   ADPCMEncoder ADPCMEncoder_inst  (.clk(clk),
@@ -68,14 +69,15 @@ module Subsystem
                                    .eanble_in(clk_enable),
                                    .data_in(in1),  // sfix20_En16
                                    .data_out(adpcm_encoder2_out1),  // sfix2
-                                   .valid_out(valid)
+                                   .valid_out(valid1)
                                    );
 
-  ADPCMDncoder ADPCMDncoder_inst (.clk(clk),
-                                   .reset_x(reset_x),
-                                   .enb(valid),
-                                   .In1(adpcm_encoder2_out1),  // sfix2
-                                   .Out1(ADPCM_Decoder1_out1)  // sfix20_En16
+  ADPCMDecoder ADPCMDncoder_inst (.clk(clk),
+                                   .rst(reset_x),
+                                   .enable_in(valid1),
+                                   .data_in(adpcm_encoder2_out1),  // sfix2
+                                   .data_out(ADPCM_Decoder1_out1),  // sfix20_En16
+                                   .valid_out(valid2)
                                    );
 
   assign Out1 = ADPCM_Decoder1_out1;
