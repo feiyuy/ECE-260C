@@ -89,8 +89,8 @@ module ALU
         end
         else begin
             if (temp_enable1) begin
-                temp_add1                               <=  temp_mul1[31:16] + temp_mul2[31:16];
-                temp_add2                               <=  temp_mul3[31:16] + temp_mul4[31:16];
+                temp_add1                               <=  temp_mul1[29:14] + temp_mul2[29:14];
+                temp_add2                               <=  temp_mul3[29:14] + temp_mul4[29:14];
 
                 temp_mu2                                <=  temp_mu1;
             end

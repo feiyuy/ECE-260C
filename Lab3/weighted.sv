@@ -81,8 +81,6 @@ This module perform sum of AULs' result with weight mu.
         end
     end
 
-    logic   signed  [31:0]                                  temp2_mu;
-
     logic   signed  [15:0]                                  temp2_data1;
     logic   signed  [15:0]                                  temp2_data2;
     logic   signed  [15:0]                                  temp2_data3;
@@ -102,8 +100,8 @@ This module perform sum of AULs' result with weight mu.
         else begin
             if (temp_enable1) begin
                 temp2_mu1                               <=  temp1_mu1;
-                temp2_mu2                               <=  temp1_mu2[31:16];
-                temp1_mu3                               <=  temp1_mu2[31:16] * mu_in;
+                temp2_mu2                               <=  temp1_mu2[29:14];
+                temp1_mu3                               <=  temp1_mu2[29:14] * mu_in;
 
                 temp2_data1                             <=  temp1_data1;
                 temp2_data2                             <=  temp1_data2;
@@ -127,7 +125,7 @@ This module perform sum of AULs' result with weight mu.
         end
         else begin
             if (temp_enable2) begin
-                temp_mul1                               <=  temp2_data1 * temp1_mu3[31:16];
+                temp_mul1                               <=  temp2_data1 * temp1_mu3[29:14];
                 temp_mul2                               <=  temp2_data2 * temp2_mu2;
                 temp_mul3                               <=  temp2_data3 * temp2_mu1;
                 temp_mul4                               <=  temp2_data4;
@@ -145,8 +143,8 @@ This module perform sum of AULs' result with weight mu.
         end
         else begin
             if(temp_enable3) begin
-                temp_add1                               <=  temp_mul1[31:16] + temp_mul2[31:16];
-                temp_add2                               <=  temp_mul3[31:16] + temp_mul4;
+                temp_add1                               <=  temp_mul1[29:14] + temp_mul2[29:14];
+                temp_add2                               <=  temp_mul3[29:14] + temp_mul4;
             end
         end
     end
